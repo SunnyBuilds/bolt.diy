@@ -78,10 +78,8 @@ RUN chmod +x /app/bindings.sh
 
 EXPOSE 5173
 
-# Healthcheck for deployment platforms
-# Increased start-period to 30s to allow wrangler to start properly
-HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=5 \
-  CMD curl -fsS http://localhost:5173/ || exit 1
+# Note: Healthcheck disabled for Coolify compatibility
+# Coolify will manage health checks externally
 
 # Start using dockerstart script with Wrangler
 CMD ["pnpm", "run", "dockerstart"]
