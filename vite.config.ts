@@ -11,8 +11,28 @@ dotenv.config({ path: '.env.local' });
 dotenv.config({ path: '.env' });
 dotenv.config();
 
+function getAllowedHosts(): string[] {
+  const envHosts = process.env.VITE_ALLOWED_HOSTS;
+  const hosts: string[] = [];
+
+  // Parse comma-separated host list
+  if (envHosts) {
+    hosts.push(...envHosts.split(',').map(h => h.trim()).filter(Boolean));
+  }
+
+  // Add localhost for development mode
+  if (process.env.NODE_ENV !== 'production') {
+    hosts.push('localhost', '127.0.0.1', '[::1]');
+  }
+
+  return hosts.length > 0 ? [...new Set(hosts)] : ['localhost'];
+}
+
 export default defineConfig((config) => {
   return {
+    server: {
+      allowedHosts: getAllowedHosts(),
+    },
     define: {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     },
